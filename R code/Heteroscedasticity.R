@@ -15,8 +15,9 @@ sticks <- Both_fins %>%
 
 apply(sticks, 2, function(x){ var(x, na.rm=T) })
 
-#linear models are fairly robust to heterogeneity of variance#
-#so long as the maximum variance is no more than 4X greater than the minimum variance#
+#linear models are fairly robust to heterogeneity of variance
+#so long as the maximum variance is no more than 4X greater 
+#than the minimum variance - does this hold for HLM?
 #Our prop = 1.94
 
 leveneTest(maxGrip ~ stick, Both_none)
