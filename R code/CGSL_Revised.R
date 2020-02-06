@@ -30,6 +30,32 @@ ENG_fins <- import_files_fins("ENG")
 Both_fins <- bind_rows(ASL_fins, ENG_fins)%>%
   mutate(Lcat=recode(Lcat, ASL="Signers", ENG="Speakers"))
 
+ACTION <- Both_fins %>%
+  filter(type == "ACTION")
+
+ASL_A <- ACTION %>%
+  filter(Lcat == "Signers")
+
+ENG_A <- ACTION %>%
+  filter(Lcat == "Speakers")
+
+ESTIMATION <- Both_fins %>%
+  filter(type == "ESTIMATION")
+
+ASL_E <- ESTIMATION %>%
+  filter(Lcat == "Signers")
+
+ENG_E <- ESTIMATION %>%
+  filter(Lcat == "Speakers")
+
+DESCRIPTION <- Both_fins %>%
+  filter(type == "DESCRIPTION")
+
+ASL_D <- DESCRIPTION %>%
+  filter(Lcat == "Signers")
+
+ENG_D <- DESCRIPTION %>%
+  filter(Lcat == "Speakers")
 
 ####Function to find file paths and import files####
 import_files_none <- function(string) {
@@ -142,12 +168,6 @@ onegroup_function_graph <- function(data, string) {
   print(graph2)
 }
 
-onegroup_function(ENG_fins, "ACTION")
-onegroup_function(ENG_fins, "ESTIMATION")
-onegroup_function(ENG_fins, "DESCRIPTION")
-onegroup_function(ASL_fins, "ACTION")
-onegroup_function(ASL_fins, "ESTIMATION")
-onegroup_function(ASL_fins, "DESCRIPTION")
 
 ####Comparing Language Groups on a Single Task####
 compare_groups_graphs <- function(data, string) {
