@@ -87,3 +87,17 @@ levene_model <- lm(sqr~obsisSubj, data = data)
 anova(levene_model)
 
 
+#Comparing Tasks
+#Model: mod_Task <<- lmer(maxGrip ~ stickcmCentered * fins*type + (1 + stickcmCentered * fins | obsisSubj), data = input)
+
+#Action-Estimation comparison
+eng_act-est <- compare2_tasks(ENG_fins, "Speakers", "ACTION", "ESTIMATION")
+                              
+                              
+asl_act-est <- compare2_tasks(ASL_fins, "Signers", "ACTION", "ESTIMATION")
+
+#Action-Estimation-Description comparison
+eng_3task <- compare3_tasks(ENG_fins, "Speakers")
+
+  
+asl_3task <- compare3_tasks(ASL_fins, "Signers")
