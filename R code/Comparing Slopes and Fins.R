@@ -140,7 +140,7 @@ graph_function_task <- function(task){
     scale_color_discrete(name = "Group")+
     #geom_text(aes(label = obsisSubj), nudge_y = .3) +
     #facet_wrap(~task) +
-    labs(title = paste("Relation of grip aperture slopes to illusion effect by participant:", task),
+    labs(title = paste("Illusion effect as a function of Grip Scaling Slope by participant:", task),
          x = "Participant Grip Scaling Slope in a Neutral Context (mm)", y = "Participant Illusion effect (mm)")
   print(slope_graph)
 }
@@ -174,9 +174,10 @@ slope_graph <- All_data %>%
   geom_point(aes(color = task)) +
   geom_smooth(method = "lm", aes(color = task))+
   #geom_text(aes(label = obsisSubj), nudge_y = .3) +
-  labs(title = paste("Relation of grip aperture slopes to illusion effect: Speakers"), 
+  labs(title = paste("Illusion effect as a function of Grip Scaling Slope: Speakers"), 
        x = "Participant Grip Scaling Slope for Descriptions in a Neutral Context (mm)", y = "Participant Illusion effect")+
-  scale_color_manual(labels = c("DESCRIPTION"), values = "#3366FF")
+  scale_color_manual(values = "#00BFC4") +
+  theme(legend.position = "none")
 
 print(slope_graph)
 

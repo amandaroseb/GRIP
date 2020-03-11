@@ -213,13 +213,19 @@ compare_groups_graphs(Both_fins, "DESCRIPTION")
 compare3_tasks <- function(data, string) {
   data$type <- factor(data$type, levels = c("DESCRIPTION", "ACTION", "ESTIMATION"))
   input <<- data
-  mod_Task <<- lmer(maxGrip ~ stickcmCentered * fins*type + (1 + stickcmCentered * fins | obsisSubj), data = input)
+  mod_Task <<- lmer(maxGrip ~ +1 + type*stickcmCentered + type*fins + fins*stickcmCentered + (1 + stickcmCentered + fins + type | obsisSubj), data = input)
   results <<- summary(mod_Task)
   print(results)
 }
 
 compare3_tasks(ENG_fins, "Speakers")
 compare3_tasks(ASL_fins, "Signers")
+
+#New model does not converge for signers - do we gain anything from this new model?
+#If not, perhaps just keep the results we have. How will I ever know what the proper model is?
+#show boxplot
+#two-way anova test - factors = type and Lcat, use maxGrip to compare
+#test results
 
 range_maxGrip <- ASL_fins %>%
   group_by(type)%>%
