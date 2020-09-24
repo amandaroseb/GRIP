@@ -1,0 +1,169 @@
+---
+title: "When the hands are used to communicate they are less suceptible to illusion than when they are used to estimate."
+author: "Amanda Brown"
+date: "September 16, 2020"
+output: github_document
+---
+
+#ABSTRACT
+
+When we use our hands to estimate the size of sticks in the Müller-Lyer illusion, we are highly susceptible to the illusion. But when we prepare to act on sticks under the same conditions, we are significantly less susceptible to the illusion. Here we ask whether our hands are susceptible to illusion when used, not to act on objects, but to describe them in spontaneous co-speech gestures or in conventional sign languages of the Deaf. Thirty-two English-speakers and 13 ASL-signers used their hands to act on, estimate, and describe sticks eliciting the Müller-Lyer illusion. For both gesture and sign, the magnitude of illusion for description was smaller than the magnitude of illusion for estimation, and not different from the magnitude of illusion for action. The mechanisms responsible for producing these non-codified gestures and codified signs thus appear to operate, not on percepts involved in estimation, but are rather derived from the way we act on objects.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#Load packages
+library(tidyverse)
+library(lme4)
+
+#Import Data 
+#Function to find and import files
+import_files_fins <- function(string) {
+  files <<- dir("data/", pattern = string, full.names = TRUE)
+  map(files, read_csv) %>%
+    bind_rows() %>%
+    type_convert() %>%
+    filter(fins != "none") %>%
+    mutate(Lcat = string, fins = factor(fins), type = factor(type))%>%
+    mutate(type=recode(type, GESTURE = "DESCRIPTION"))
+}
+
+#Import Files with open/closed fins
+ASL_fins <- import_files_fins("ASL")
+ENG_fins <- import_files_fins("ENG") 
+Both_fins <- bind_rows(ASL_fins, ENG_fins)%>%
+  mutate(Lcat=recode(Lcat, ASL="Signers", ENG="Speakers"))
+
+#Function to find and import files: data with no illusion conditions
+import_files_none <- function(string) {
+  files <<- dir("data/", pattern = string, full.names = TRUE)
+  map(files, read_csv) %>%
+    bind_rows() %>%
+    type_convert() %>%
+    filter(fins == "none") %>%
+    mutate(Lcat = string, fins = factor(fins), type = factor(type))%>%
+    mutate(type=recode(type, GESTURE = "DESCRIPTION"))
+}
+
+
+#Import Files with no fins
+ASL_none <- import_files_none("ASL")
+ENG_none <- import_files_none("ENG") 
+Both_none <- bind_rows(ASL_none, ENG_none)
+Both_none <- Both_none %>%
+  mutate(Lcat=recode(Lcat, ASL="Signers", ENG="Speakers"))
+
+```
+
+## Muller-Lyer Illusion
+
+![](ml.jpg)
+Figure 1. The Müller-Lyer illusion.  A thin stick is placed on the horizontal line. The closed configuration (closed fins) makes the center line appear shorter than the open configuration (open fins). In reality, the two center lines are the same length. 
+
+
+# METHOD
+*Participants* 
+Forty-five right-handed adults (ages 19-68 years, 23 female) participated: 32 adults whose primary language is English were recruited from the study pool at the University of Chicago; 13 adults whose primary language is ASL were recruited at a local Deaf event or through email advertisement (all 13 were deaf and learned ASL before the age of 6). 
+
+*Tasks and Procedure*
+Using motion capture technology, we recorded participants’ manual movements as they performed tasks with four thin sticks of different lengths (50mm, 70mm, 90mm, 110mm). Each stick was placed on a background image that created the Müller-Lyer illusion, surrounding the stick with open fins or closed fins (Fig.1; Goodale, Jakobson, & Keillor, 1994). Participants were also presented with a set of sticks with no background image (i.e., without fins). Thus, the procedure contained 12 displays, presented in pseudorandom order and repeated 8 times in separate blocks for each pf three tasks. 
+
+*Action Task.* Participants used their right hand to pick up the stick in the display, holding it at the two ends, and immediately set it down again on the table. They then returned their hand to the starting position. 
+
+*Estimation Task.*  Participants used their right hand to estimate the length of the stick in the display using the thumb and forefinger, maintaining the natural position of the wrist with hand on the table, perpendicular to the stimulus.
+
+*Description Task.*  Participants watched a video of a hand holding a 20mm white disk tracing a unique path of motion over a neutral background (approx. 5 seconds). When the video ended, participants were instructed to close their eyes, and an experimenter placed the visual display on the table in front of the participant. Participants were told to open their eyes, pick up the stick in the display and perform the movement they had seen in the video. Participants were then asked to close their eyes again, and the experimenter removed the materials from the table. When prompted, participants opened their eyes and described the movements they just performed with the stick. Participants were instructed to provide a description of the movement they had just performed detailed enough that someone who did not see the movement could perform it exactly as they had.
+
+An example of the movement performed in the Description task, as well as examples of the Action and Estimation tasks can be found on our OSF page (https://osf.io/3rb6u/).
+
+*Analysis*
+We performed hierarchical linear modeling with the R package lme4 (Bates, Mächler, Bolker, & Walker, 2014). We fit a linear mixed-effects model with maximum grip aperture (MGA) as the outcome variable, with fixed effects of stick size, illusion display and task, and their three-way interaction: maxGrip ~ stick * fins * task + (1 + stick * fins | subject). We fit a maximal random effects structure, which includes random slopes for stick and fins and their interaction by participant. We fit separate models with the same fixed and random effects structure for ASL and co-speech gesture.
+
+# RESULTS
+To compare the results of our tasks, we examined two measures: (1) The grip scaling slope, the relation between the MGA and the size of its target object for the four stick lengths. This measure indicates how accurately participants are capturing the increases in stick sizes––positive slopes indicate that the handshape is increasing as the lengths of the sticks increase. (2) The illusion effect, the difference between grip apertures in the closed fins condition and the open fins condition. This measure indicates how influenced participants are by the illusion––a large difference indicates that the participants are strongly influenced by the illusion. Figure 4 presents the linear mixed-effects model predictions for the effects on maximum grip apertures of stick size (grip scaling slope) and illusion background (illusion effect) for signers (top) and speakers (bottom) in each of the three tasks (Action, Description, Estimation). 
+
+### Action and Estimation
+
+Not surprisingly, when grasping the objects, signers and speakers increased grip apertures as the sticks increased in length, resulting in a positive grip scaling slope. Similarly, when estimating the size of the stick, signers and speakers also increased grip apertures as the sticks increased in length.Both groups thus captured the increasing lengths of the objects in their grip apertures, as expected. Confidence intervals for signers’ and speakers’ grip scaling slopes overlap for action and for estimation. This finding supports the conclusion that the grip scaling slopes (or rate of increase in grip apertures as objects get bigger) for action and estimation are not statistically different between signers and speakers.
+
+```{r action_distribution}
+
+
+
+```
+
+For the illusion effect, signers and speakers used wider grip apertures for sticks presented between open fins than for sticks presented between closed fins when grasping the sticks and when estimating stick-length.In addition, as in previous studies (Bruno & Franz, 2009), post-hoc t-tests (Tukey corrected) confirmed that the size of the illusion effect (i.e., the difference between grip apertures for open vs. closed fins) was significantly greater in the Estimation task than in the Action task for both signers and speakers. In other words, the effect of the illusion on grip apertures was stronger when participants estimated the size of the stick with their hands than when they reached to grasp the stick, for both signers and speakers.
+
+```{r action_distribution_wfins}
+dataNewENGACT %>%
+  filter(fins != "none") %>%
+  ggplot(aes(x = maxGrip, y = stick, fill = fins))+
+  geom_density_ridges(alpha = .55)+
+  labs(title = "Distribution of Maximum Grip Apertures by Stick and Fins - ACTION")
+
+```
+
+### Description
+
+*Signers: American Sign Language.* When describing how they moved the stick, signers used an increasingly large grip aperture as the sticks increased in length, resulting in a positive grip scaling slope. However, post-hoc t-tests revealed that the grip scaling slope was significantly smaller in the Description task than in the Action and Estimation tasks. In other words, signers did not increase their grip apertures for larger sticks in the Description task as much as they did in the Action and Estimation tasks. Nevertheless, their slope was positive, indicating that their handshapes did capture the increasing stick lengths. 
+
+```{r estimation_distribution}
+
+```
+
+With respect to the illusion effect, signers used wider grip apertures for sticks between open fins than for sticks between closed fins when describing what they did with the stick. However, post-hoc tests revealed that the effect of the illusion on Descriptions was significantly different from, and smaller than, the effect of the illusion on Estimations and not significantly different from the effect of the illusion on Actions.
+
+
+```{r estimation_distribution_wfins}
+
+
+```
+
+*Speakers: Co-speech gesture.* When describing how they moved the stick, speakers also used an increasingly large grip aperture in their co-speech gestures as the sticks increased in length, resulting in a positive grip scaling slope. As for signers, the grip scaling slope for speakers was significantly smaller in the Description task than in the Action and Estimation tasks.
+
+We have `r nrow(dataNewENGACT)` observations of grasping action, `r nrow(dataNewENGEST)` observations of manual estimation and only `r nrow(dataNewENGGRIP)` observations of gestured grasps. 
+
+
+```{r gesture_distribution}
+
+
+```
+
+With respect to the illusion effect, speakers used slightly wider grip apertures for sticks between open fins than for sticks between closed fins in the co-speech gestures they produced when describing what they did with the stick.); this difference was not statistically significant. As in signers’ descriptions, post-hoc t-tests confirmed that the effect of the illusion on Descriptions was significantly different from, and smaller than, the effect of the illusion on Estimations and not significantly different from the effect of the illusion on Actions.
+
+
+```{r gesture_distribution_wfins}
+
+
+```
+
+## Illusion effects as a function of grip scaling slope. 
+
+We compared speakers and signers directly on the Description task alone, examining the fixed effects of Language on grip scaling slopes (maxGrip ~ stick * fins * language + (1 + stick * fins | subject). Regression analyses confirmed that the grip scaling slope for description was significantly steeper for signers than for speakers indicating that speakers were less good at capturing the actual size of the largest sticks in their manual descriptions, although on average they did reliably capture the relative sizes of the sticks. 
+
+
+```{r lazy_frequency}
+
+
+```
+
+It may be difficult to detect an illusion effect if descriptions do not capture the increasing lengths of the sticks. To explore this possibility, we assessed the illusion effect for each participant as a function of the grip scaling slope that the participant produced when there was no illusion display (i.e., when the sticks were presented without any fins). Figure 5 presents each participant’s sensitivity to stick length, measured by grip scaling slope in a neutral context (sticks presented without fins, x-axis) in relation to that participant’s sensitivity to illusory size cues, measured by illusion effect (difference in grip apertures for the closed versus open illusion displays, y-axis) for signers (in red) and speakers (in blue).  See Table S1 for details on grip scaling slopes in neutral vs. non-neutral contexts for each of the three tasks (Action, Estimation, Description).
+
+
+```{r chunk_model, cache=FALSE}
+knitr::read_chunk('Subject_Slopes_Model.R')
+```
+
+Note that signers’ grip scaling slopes in a neutral context are larger than speakers’; indeed, there is no overlap between the groups. Moreover, signers displayed the same illusion effect no matter how steep their grip scaling slope––results of the Pearson’s correlation demonstrate that the grip scaling slopes and illusion effects for signers are not significantly correlated (r(8)=.25, p=.48), suggesting that grip scaling slope and illusion effect are independent in signers. In contrast, we see a positive relation between participant grip scaling slope in a neutral context and size of the illusion effect in speakers’ co-speech gestures––the steeper the slope, the bigger the illusion effect (r(30)=.43, p=.015). 
+
+
+```{r subject_slopes, include=FALSE}
+
+```
+
+To summarize, our goal was to determine how spontaneous descriptions that signers and speakers produce with their hands compare to the actions and estimations they produce with their hands in the same context, focusing on two features:  (1) how well the hand reflects properties of the object; in this case, increasing stick length––grip scaling slope, and (2) how susceptible the hand is to perceptual illusion; in this case, the Müller-Lyer illusion––the illusion effect. With respect to grip scaling slope, we found that both signers and speakers capture increasing stick length in their hands better in the Action and Estimation tasks than in the Description task, although both groups do capture relative stick length to some degree in their descriptions.  With respect to the illusion effect, we first replicated previous work in speakers showing that the hands are more susceptible to the Müller-Lyer illusion when they estimate stick length than when they reach to act on the same sticks, and we extended this effect to signers. Moreover, we found that the magnitude of the illusion effect in descriptions was significantly different from the magnitude of the illusion effect in estimations, and not significantly different from the magnitude of the illusion effect in actions. Both signers and speakers showed this pattern, but signers were better at capturing stick length than speakers. 
+
+```{r distributions_by_groups}
+
+
+```
