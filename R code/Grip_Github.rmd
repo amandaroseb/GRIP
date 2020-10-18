@@ -57,7 +57,7 @@ Both_none <- Both_none %>%
 
 ## Muller-Lyer Illusion
 
-![](ml.jpg)
+![](/images/ml.jpg)
 Figure 1. The Müller-Lyer illusion.  A thin stick is placed on the horizontal line. The closed configuration (closed fins) makes the center line appear shorter than the open configuration (open fins). In reality, the two center lines are the same length. 
 
 
