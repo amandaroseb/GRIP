@@ -10,6 +10,6 @@ More information related to this project can be found on [our page](https://osf.
 
 On this site you will find:
 * [project data for grasping apertures](/data)
-* [Markdown file for current analysis](/Grip_Github.rmd)
+* [Markdown file for current analysis](/R code/Grip_Github.rmd)
 
 The grasping data was extracted from motion capture time series data using the package [mocapGrip](https://rdrr.io/github/jonkeane/mocapGrip/). More about the data processing pipeline can be found on [the package github site](https://github.com/jonkeane/mocapGrip/blob/master/README.md). Although the mocapGrip package contains built-in analytic functions, the data for this paper were analyzed separately using [lme4](https://rdrr.io/cran/lme4/).
